@@ -1,24 +1,31 @@
-module.exports = options => {
-    return {
-        entry: './app.js',
-        output: {
-            filename: 'bundle.js',
+const path = require('path');
+
+module.exports = {
+  mode: 'development',
+  entry: './client/index.js',
+  output: {
+    path: path.join(__dirname, '/dist'),
+    filename: 'bundle.js',
+  },
+  module: {
+    rules: [
+      {
+        test: /jsx?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+        query: {
+          presets: ['@babel/env', '@babel/react'],
+          plugins: ['@babel/plugin-transform-runtime', '@babel/transform-async-to-generator'],
         },
-        module: {
-            rules: [
-                {
-                    test: /.js$/,
-                    exclude: /node_modules/,
-                    use: [
-                        {
-                            loader: 'babel-loader',
-                            options: {
-                                cacheDirectory: true,
-                            },
-                        },
-                    ],
-                },
-            ],
-        },
-    }
+      },
+      {
+        test: /scss$/,
+        exclude: /node_modules/,
+        loaders: ['style-loader', 'css-loader', 'sass-loader'],
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+  },
 };
